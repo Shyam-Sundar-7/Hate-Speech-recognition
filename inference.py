@@ -17,8 +17,8 @@ class HatePredictor:
         inference_sample = {"sentence": text}
         processed = self.processor.tokenize_data(inference_sample)
         logits = self.model(
-            torch.tensor([processed["input_ids"]]),
-            torch.tensor([processed["attention_mask"]]),
+            torch.tensor([processed["input_ids"]]).to(self.model.device()),
+            torch.tensor([processed["attention_mask"]]).to(self.model.device()),
         )
         scores = self.softmax(logits[0]).tolist()
         predictions = []
