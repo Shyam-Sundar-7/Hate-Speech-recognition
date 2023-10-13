@@ -12,7 +12,8 @@ def main():
     model = HateModel()
 
     checkpoint_callback = ModelCheckpoint(
-        dirpath="./models", monitor="val_loss", mode="min"
+        dirpath="./models",filename="hate_model",
+        save_top_k=1,monitor="val_loss", mode="min"
     )
     early_stopping_callback = EarlyStopping(
         monitor="val_loss", patience=3, verbose=True, mode="min"
