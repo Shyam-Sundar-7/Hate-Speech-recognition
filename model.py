@@ -75,20 +75,20 @@ class HateModel(pl.LightningModule):
         self.log("valid/f1", f1, prog_bar=True, on_epoch=True)
         return {"labels": labels, "logits": logits}
     
-    def on_validation_epoch_end(self, outputs):
-        labels = torch.cat([x["labels"] for x in outputs])
-        logits = torch.cat([x["logits"] for x in outputs])
-        preds = torch.argmax(logits, 1)
+    # def on_validation_epoch_end(self, outputs):
+    #     labels = torch.cat([x["labels"] for x in outputs])
+    #     logits = torch.cat([x["logits"] for x in outputs])
+    #     preds = torch.argmax(logits, 1)
 
-        ## There are multiple ways to track the metrics
-        # 1. Confusion matrix plotting using inbuilt W&B method
-        self.logger.experiment.log(
-            {
-                "conf": wandb.plot.confusion_matrix(
-                    probs=logits.numpy(), y_true=labels.numpy()
-                )
-            }
-        )
+    #     ## There are multiple ways to track the metrics
+    #     # 1. Confusion matrix plotting using inbuilt W&B method
+    #     self.logger.experiment.log(
+    #         {
+    #             "conf": wandb.plot.confusion_matrix(
+    #                 probs=logits.numpy(), y_true=labels.numpy()
+    #             )
+    #         }
+    #     )
 
         # # 2. Confusion Matrix plotting using scikit-learn method
         # wandb.log({"cm": wandb.sklearn.plot_confusion_matrix(labels.numpy(), preds)})
