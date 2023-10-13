@@ -16,10 +16,10 @@ def main():
 
     checkpoint_callback = ModelCheckpoint(
         dirpath="./models",filename="hate_model",
-        save_top_k=1,monitor="val_loss", mode="min"
+        save_top_k=1,monitor="valid/loss", mode="min"
     )
     early_stopping_callback = EarlyStopping(
-        monitor="val_loss", patience=3, verbose=True, mode="min"
+        monitor="valid/acc", patience=3, verbose=True, mode="min"
     )
     
     wandb_logger = WandbLogger(project="mlops", entity="shyamsundar007")
@@ -34,7 +34,7 @@ def main():
     
     
     trainer = pl.Trainer(
-        max_epochs=2,
+        max_epochs=5,
         logger=wandb_logger,
         callbacks=[checkpoint_callback, early_stopping_callback],
         log_every_n_steps=10,
