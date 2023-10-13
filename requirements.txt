@@ -7,3 +7,5 @@ torchmetrics
 matplotlib
 seaborn
 numpy
+flask
+waitress
