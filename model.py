@@ -22,17 +22,17 @@ class HateModel(pl.LightningModule):
         # Freeze the pre-trained BERT model
         for param in self.bert.parameters():
             param.requires_grad = False
-        self.train_accuracy_metric = torchmetrics.Accuracy()
-        self.val_accuracy_metric = torchmetrics.Accuracy()
-        self.f1_metric = torchmetrics.F1(num_classes=self.num_classes)
-        self.precision_macro_metric = torchmetrics.Precision(
+        self.train_accuracy_metric = torchmetrics.Accuracy(task="binary", num_classes=self.num_classes)
+        self.val_accuracy_metric = torchmetrics.Accuracy(task="binary", num_classes=self.num_classes)
+        self.f1_metric = torchmetrics.F1Score(task="binary", num_classes=self.num_classes)
+        self.precision_macro_metric = torchmetrics.Precision(task="binary",
             average="macro", num_classes=self.num_classes
         )
-        self.recall_macro_metric = torchmetrics.Recall(
+        self.recall_macro_metric = torchmetrics.Recall(task="binary",
             average="macro", num_classes=self.num_classes
         )
-        self.precision_micro_metric = torchmetrics.Precision(average="micro")
-        self.recall_micro_metric = torchmetrics.Recall(average="micro")
+        self.precision_micro_metric = torchmetrics.Precision(average="micro",task="binary", num_classes=self.num_classes)
+        self.recall_micro_metric = torchmetrics.Recall(average="micro",task="binary", num_classes=self.num_classes)
         
 
     def forward(self, input_ids, attention_mask):
@@ -75,7 +75,7 @@ class HateModel(pl.LightningModule):
         self.log("valid/f1", f1, prog_bar=True, on_epoch=True)
         return {"labels": labels, "logits": logits}
     
-    def validation_epoch_end(self, outputs):
+    def on_validation_epoch_end(self, outputs):
         labels = torch.cat([x["labels"] for x in outputs])
         logits = torch.cat([x["logits"] for x in outputs])
         preds = torch.argmax(logits, 1)
@@ -90,22 +90,22 @@ class HateModel(pl.LightningModule):
             }
         )
 
-        # 2. Confusion Matrix plotting using scikit-learn method
-        wandb.log({"cm": wandb.sklearn.plot_confusion_matrix(labels.numpy(), preds)})
+        # # 2. Confusion Matrix plotting using scikit-learn method
+        # wandb.log({"cm": wandb.sklearn.plot_confusion_matrix(labels.numpy(), preds)})
 
-        # 3. Confusion Matric plotting using Seaborn
-        data = confusion_matrix(labels.numpy(), preds.numpy())
-        df_cm = pd.DataFrame(data, columns=np.unique(labels), index=np.unique(labels))
-        df_cm.index.name = "Actual"
-        df_cm.columns.name = "Predicted"
-        plt.figure(figsize=(7, 4))
-        plot = sns.heatmap(
-            df_cm, cmap="Blues", annot=True, annot_kws={"size": 16}
-        )  # font size
-        self.logger.experiment.log({"Confusion Matrix": wandb.Image(plot)})
+        # # 3. Confusion Matric plotting using Seaborn
+        # data = confusion_matrix(labels.numpy(), preds.numpy())
+        # df_cm = pd.DataFrame(data, columns=np.unique(labels), index=np.unique(labels))
+        # df_cm.index.name = "Actual"
+        # df_cm.columns.name = "Predicted"
+        # plt.figure(figsize=(7, 4))
+        # plot = sns.heatmap(
+        #     df_cm, cmap="Blues", annot=True, annot_kws={"size": 16}
+        # )  # font size
+        # self.logger.experiment.log({"Confusion Matrix": wandb.Image(plot)})
 
-        self.logger.experiment.log(
-            {"roc": wandb.plot.roc_curve(labels.numpy(), logits.numpy())}
-        )
+        # self.logger.experiment.log(
+        #     {"roc": wandb.plot.roc_curve(labels.numpy(), logits.numpy())}
+        # )
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.hparams["lr"])

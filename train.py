@@ -49,7 +49,7 @@ def main():
         monitor="val_loss", patience=3, verbose=True, mode="min"
     )
     
-    wandb_logger = WandbLogger(project="hate", entity="shyam")
+    wandb_logger = WandbLogger(project="mlops", entity="shyamsundar007")
 
     # trainer = pl.Trainer(accelerator="gpu",
     #     default_root_dir="logs",
