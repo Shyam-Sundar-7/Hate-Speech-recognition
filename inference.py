@@ -11,14 +11,14 @@ class HatePredictor:
         self.model.freeze()
         self.processor = DataModule()
         self.softmax = torch.nn.Softmax(dim=0)
-        self.lables = ["unacceptable", "acceptable"]
+        self.lables = ["Normal Speech", "Toxic Speech"]
 
     def predict(self, text):
-        inference_sample = {"sentence": text}
+        inference_sample = {"comment_text": text}
         processed = self.processor.tokenize_data(inference_sample)
         logits = self.model(
-            torch.tensor([processed["input_ids"]]).to(self.model.device()),
-            torch.tensor([processed["attention_mask"]]).to(self.model.device()),
+            torch.tensor([processed["input_ids"]]).to(self.model.device),
+            torch.tensor([processed["attention_mask"]]).to(self.model.device),
         )
         scores = self.softmax(logits[0]).tolist()
         predictions = []
@@ -29,6 +29,6 @@ class HatePredictor:
 
 if __name__ == "__main__":
     sentence = "The boy is sitting on a bench"
-    predictor = HatePredictor("./models/epoch=0-step=267.ckpt")
+    predictor = HatePredictor("./models/hate_model.ckpt")
     print(predictor.predict(sentence))
 
