@@ -16,7 +16,10 @@ class DataModule(pl.LightningDataModule):
         # Check if the dataset is available; if not, download and store in the "data" folder
         if not os.path.exists("data/wiki_toxic"):
             toxic_dataset = load_dataset("OxAISH-AL-LLM/wiki_toxic")
-            toxic_dataset.save_to_disk("data/wiki_toxic")
+            # toxic_dataset.save_to_disk("data/wiki_toxic")
+            toxic_dataset["train"].to_pandas().to_csv("data/wiki_toxic/train.csv", index=False)
+            toxic_dataset["validation"].to_pandas().to_csv("data/wiki_toxic/validation.csv", index=False)
+            toxic_dataset["test"].to_pandas().to_csv("data/wiki_toxic/test.csv", index=False)
 
     def tokenize_data(self, example):
         return self.tokenizer(
@@ -28,9 +31,8 @@ class DataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         # Load the dataset from the stored location
-        toxic_dataset = datasets.load_from_disk("data/wiki_toxic")
-        self.train_data = toxic_dataset["train"]
-        self.val_data = toxic_dataset["validation"]
+        self.train_data=pd.read_csv("data/wiki_toxic/train.csv")
+        self.val_data=pd.read_csv("data/wiki_toxic/validation.csv")
         
         # Process and format the data
         if stage == "fit" or stage is None:
