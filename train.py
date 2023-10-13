@@ -18,7 +18,7 @@ def main():
         monitor="val_loss", patience=3, verbose=True, mode="min"
     )
 
-    trainer = pl.Trainer(
+    trainer = pl.Trainer(accelerator="gpu",
         default_root_dir="logs",
         max_epochs=5,
         fast_dev_run=False,
