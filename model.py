@@ -15,6 +15,9 @@ class HateModel(pl.LightningModule):
         self.bert = AutoModel.from_pretrained(model_name)
         self.W = nn.Linear(self.bert.config.hidden_size, 2)
         self.num_classes = 2
+        # Freeze the pre-trained BERT model
+        for param in self.bert.parameters():
+            param.requires_grad = False
         
 
     def forward(self, input_ids, attention_mask):
