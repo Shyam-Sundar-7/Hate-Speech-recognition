@@ -62,6 +62,31 @@ Ensure that you have the following dependencies installed to run the project:
 -   Flask
 -   Docker
 
+Execution
+---------
+
+installing dependencies
+```
+pip install -r requirements.txt
+```
+training execution
+```
+python train.py
+```
+inference execution
+```
+python inference.py
+```
+docker build to image
+```
+docker build -t hate .
+```
+docker image on deployment
+```
+docker run -p 9696:9696 hate
+```
+
+
 Conclusion
 ----------
 
