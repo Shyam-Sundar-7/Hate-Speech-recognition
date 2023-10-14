@@ -15,7 +15,7 @@ app = Flask('__name__')
 def predict():
     client = request.get_json()
 
-    y_pred = model.predict(client)
+    y_pred = model.predict(client["sentence"])
     toxic_score = y_pred[1]['score']
 
 

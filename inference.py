@@ -6,7 +6,7 @@ from data import DataModule
 class HatePredictor:
     def __init__(self, model_path):
         self.model_path = model_path
-        self.model = HateModel.load_from_checkpoint(model_path)
+        self.model = HateModel.load_from_checkpoint(model_path,map_location="cpu")
         self.model.eval()
         self.model.freeze()
         self.processor = DataModule()
