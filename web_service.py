@@ -3,12 +3,13 @@ from flask import Flask
 from flask import jsonify,request
 from inference import HatePredictor
 from waitress import serve
+import torch
 
 
 
 model = HatePredictor("models/hate_model.ckpt")
 
-app = Flask('hate')
+app = Flask('__name__')
 
 @app.route('/predict', methods=['POST'])
 def predict():
