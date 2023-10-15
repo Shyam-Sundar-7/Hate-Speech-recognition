@@ -7,7 +7,7 @@ Overview
 The Hate Speech Recognition project aims to classify text data as either hate speech or normal speech using a fine-tuned BERT model. The project leverages the Hugging Face "OxAISH-AL-LLM/wiki_toxic" dataset and the "google/bert_uncased_L-2_H-128_A-2" model. The implementation includes training and evaluation of the model, and finally, deploying the model using Flask and Docker.
 
 
-![Phone](hate.jpeg))
+![Phone](hate.jpeg)
 
 
 Data
