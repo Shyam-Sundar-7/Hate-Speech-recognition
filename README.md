@@ -1,5 +1,5 @@
-Hate Speech Recognition Project Documentation
-=============================================
+Hate Speech Recognition 
+========================
 
 Overview
 --------
